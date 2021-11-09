@@ -1,1 +1,1 @@
-"# keycloak-joomla-user-storage" 
+# keycloak-joomla-user-storage
