@@ -34,6 +34,7 @@ public class JoomlaUserStorageProvider
     private static final Logger logger = Logger.getLogger(JoomlaUserStorageProvider.class);
 
     private static final String SQL_GET_USER_BY_USERNAME    = "SELECT id, name, username, email, password, block FROM $tableName where username = ?";
+    private static final String SQL_GET_USER_COUNT    = "SELECT count(id) as count FROM $tableName Where block = 0";
 
     public JoomlaUserStorageProvider(KeycloakSession session, ComponentModel config, Connection connection) {
         this.session = session;
@@ -342,5 +343,47 @@ public class JoomlaUserStorageProvider
     public List<UserModel> searchForUserByUserAttribute(String attrName, String attrValue, RealmModel realm) {
         // TODO Auto-generated method stub
         return null;
+    }
+
+    /**
+     * @param realm
+     * @param boolean
+     * @return int
+     */
+    @Override
+    public int getUsersCount(RealmModel realm, boolean includeServiceAccount) {
+        String query = setTableNameToQuery(SQL_GET_USER_COUNT, "users");
+        Statement stmt = null;
+        ResultSet rs = null;
+        int count = 0;
+        try{
+            stmt = connection.createStatement();            
+            rs = stmt.executeQuery(query);
+            if(rs.next()){
+                count = rs.getInt("count");
+            }
+        } catch(SQLException ex) {
+            logger.error("SQLException: " + ex.getMessage());
+            logger.error("SQLState: " + ex.getSQLState());
+            logger.error("VendorError: " + ex.getErrorCode());
+        } finally{
+            if(rs != null){
+                try{
+                    rs.close();
+                } catch(SQLException sqlEx) {
+
+                }
+                rs = null;
+            }
+            if(stmt != null){
+                try{
+                    stmt.close();
+                } catch(SQLException sqlEx) {
+
+                }
+                stmt = null;
+            }
+        }
+        return count;
     }
 }
