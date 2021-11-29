@@ -1,6 +1,7 @@
-name: buildIt
+on:
+  push:
 
-on: [push]
+name: Build with Package
 
 jobs:
   build:
