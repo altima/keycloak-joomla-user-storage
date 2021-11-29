@@ -19,6 +19,12 @@ jobs:
         uses: gradle/wrapper-validation-action@e6e38bacfdf1a337459f332974bb2327a31aaf4b
       - name: Build with Gradle
         run: ./gradlew shadowJar
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v2
+        id: upload_artifacts
+        with:
+          name: Package
+          path: build/libs
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
@@ -36,4 +42,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: build/libs/*.jar
+          asset_path: build/libs/keycloak-joomla-user-storage-all.jar
+          asset_name: Keycloak-Joomla-UserStorage.jar
+          asset_content_type: application/jar
