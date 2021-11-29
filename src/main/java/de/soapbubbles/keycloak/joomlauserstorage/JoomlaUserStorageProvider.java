@@ -33,7 +33,7 @@ public class JoomlaUserStorageProvider
 
     private static final Logger logger = Logger.getLogger(JoomlaUserStorageProvider.class);
 
-    private static final String SQL_GET_USER_BY_USERNAME    = "SELECT id, name, username, email, password, block FROM $tableName where username = ?";
+    private static final String SQL_GET_USER_BY_EMAIL    = "SELECT id, name, username, email, password, block FROM $tableName where email = ?";
     private static final String SQL_GET_USER_COUNT    = "SELECT count(id) as count FROM $tableName Where block = 0";
 
     public JoomlaUserStorageProvider(KeycloakSession session, ComponentModel config, Connection connection) {
@@ -164,7 +164,7 @@ public class JoomlaUserStorageProvider
         return new AbstractUserAdapter(session, realm, config) {
             @Override
             public String getUsername() {
-                return username;
+                return email;
             }
             @Override
             public String getFirstName() {
@@ -193,7 +193,7 @@ public class JoomlaUserStorageProvider
     @Override
     public UserModel getUserByUsername(String username, RealmModel realm) {
         return getUserWithFilter(
-            setTableNameToQuery(SQL_GET_USER_BY_USERNAME, "users"), 
+            setTableNameToQuery(SQL_GET_USER_BY_EMAIL, "users"), 
             username, 
             realm);
     }
@@ -217,7 +217,7 @@ public class JoomlaUserStorageProvider
     public boolean isConfiguredFor(RealmModel realm, UserModel user, String credentialType) {
         try{
             String password = getUserPasswordHash(
-                setTableNameToQuery(SQL_GET_USER_BY_USERNAME, "users"), 
+                setTableNameToQuery(SQL_GET_USER_BY_EMAIL, "users"), 
                 user.getUsername()
             );
 
@@ -243,7 +243,7 @@ public class JoomlaUserStorageProvider
             }
 
             String passwordHash = getUserPasswordHash(
-                setTableNameToQuery(SQL_GET_USER_BY_USERNAME, "users"), 
+                setTableNameToQuery(SQL_GET_USER_BY_EMAIL, "users"), 
                 user.getUsername()
             );
 
