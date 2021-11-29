@@ -43,5 +43,5 @@ jobs:
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: build/libs/keycloak-joomla-user-storage-all.jar
-          asset_name: Keycloak-Joomla-UserStorage.jar
+          asset_name: keycloak-joomla-user-storage-all.jar
           asset_content_type: application/jar
